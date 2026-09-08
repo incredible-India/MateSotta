@@ -1,56 +1,28 @@
- private readonly AppSettings _settings;
- private readonly MongoCouponRepository _repository;
- private readonly CodeEncryptor _encryptor;
+    var settings = new AppSettings();
+    LoggerSetup.Configure(settings);
 
- public CouponLinkService(AppSettings settings, MongoCouponRepository repository, CodeEncryptor encryptor)
- {
-     _settings = settings;
-     _repository = repository;
-     _encryptor = encryptor;
- }
+    try
+    {
+        var repository = new MongoCouponRepository(
+            settings.MongoConnectionString, settings.MongoDatabaseName, settings.MongoCollectionName);
+        var encryptor = new CodeEncryptor(settings.EncryptionKey);
+        var service = new CouponLinkService(settings, repository, encryptor);
 
- /// <summary>
- /// Generates one new, guaranteed-unique coupon, saves it, and returns the full URL to
- /// embed in the QR code: BaseUrl?uuid=&lt;encryptedCode&gt;
- /// </summary>
- public async Task<string> GenerateCouponLinkAsync()
- {
-     for (var attempt = 1; attempt <= _settings.MaxGenerationRetries; attempt++)
-     {
-         var code = CodeGenerator.Generate();
+        repository.EnsureCollectionAndIndexesAsync().GetAwaiter().GetResult();
 
-         // Belt-and-suspenders: check first (cheap, indexed) to avoid burning a duplicate-key
-         // error in the common case, but still handle the race via TryInsertAsync below,
-         // since two processes could both pass this check for the same code.
-         if (await _repository.CouponExistsAsync(code))
-         {
-             Log.Warning("Generated code already exists, regenerating (attempt {Attempt})", attempt);
-             continue;
-         }
+        var url = service.GenerateCouponLinkAsync().GetAwaiter().GetResult();
 
-         var now = DateTime.UtcNow;
-         var document = new CouponDocument
-         {
-             CouponCode = code,
-             EncryptedCode = _encryptor.Encrypt(code),
-             IsRedeemed = false,
-             GeneratedAt = now,
-             ExpiresAt = now.AddDays(_settings.CouponValidityDays),
-             RedeemedAt = null
-         };
-
-         var inserted = await _repository.TryInsertAsync(document);
-         if (!inserted)
-         {
-             Log.Warning("Insert hit a duplicate-key race, regenerating (attempt {Attempt})", attempt);
-             continue;
-         }
-
-         var url = $"{_settings.BaseUrl}?uuid={document.EncryptedCode}";
-         Log.Information("Generated coupon {CouponCode}, expires {ExpiresAt:u}", code, document.ExpiresAt);
-         return url;
-     }
-
-     throw new InvalidOperationException(
-         $"Failed to generate a unique coupon code after {_settings.MaxGenerationRetries} attempts.");
- }
+        Console.WriteLine(url);
+        return 0;
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "Coupon generation failed");
+        Console.Error.WriteLine("Failed to generate coupon link. See log file for details.");
+        return 1;
+    }
+    finally
+    {
+        Log.CloseAndFlush();
+    }
+}
