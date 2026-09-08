@@ -1,68 +1,94 @@
- private const string CouponCodeIndexName = "ux_couponCode";
- private const int DuplicateKeyErrorCode = 11000;
+ private readonly byte[] _key;
 
- private readonly IMongoCollection<CouponDocument> _collection;
-
- public MongoCouponRepository(string connectionString, string databaseName, string collectionName)
+ public CodeEncryptor(byte[] key)
  {
-     var client = new MongoClient(connectionString);
-     var database = client.GetDatabase(databaseName);
-     _collection = database.GetCollection<CouponDocument>(collectionName);
+     if (key == null || key.Length != 32)
+     {
+         throw new ArgumentException("Encryption key must be 32 bytes (AES-256).", nameof(key));
+     }
+     _key = key;
  }
 
- /// <summary>
- /// Point 14: use the collection if it already exists, otherwise create it - then make sure
- /// the unique index on couponCode exists either way. Safe to call on every startup
- /// (CreateOneAsync/CreateCollection are no-ops when the target already exists in the way we need).
- /// </summary>
- public async Task EnsureCollectionAndIndexesAsync()
+ public string Encrypt(string plainCode)
  {
-     var database = _collection.Database;
-     var existingNames = await (await database.ListCollectionNamesAsync(
-         new ListCollectionNamesOptions
+     if (string.IsNullOrEmpty(plainCode))
+     {
+         throw new ArgumentException("Value cannot be null or empty.", nameof(plainCode));
+     }
+
+     using (var aes = Aes.Create())
+     {
+         aes.Key = _key;
+         aes.Mode = CipherMode.CBC;
+         aes.Padding = PaddingMode.PKCS7;
+         aes.GenerateIV();
+
+         using (var encryptor = aes.CreateEncryptor())
          {
-             Filter = new MongoDB.Bson.BsonDocument("name", _collection.CollectionNamespace.CollectionName)
-         })).ToListAsync();
+             var plainBytes = System.Text.Encoding.UTF8.GetBytes(plainCode);
+             var cipherBytes = encryptor.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
 
-     if (existingNames.Count == 0)
-     {
-         await database.CreateCollectionAsync(_collection.CollectionNamespace.CollectionName);
-         Log.Information("Created MongoDB collection {Collection}", _collection.CollectionNamespace.CollectionName);
+             // IV + ciphertext, so decryption doesn't need the IV stored anywhere else.
+             var payload = new byte[aes.IV.Length + cipherBytes.Length];
+             Buffer.BlockCopy(aes.IV, 0, payload, 0, aes.IV.Length);
+             Buffer.BlockCopy(cipherBytes, 0, payload, aes.IV.Length, cipherBytes.Length);
+
+             return ToBase64Url(payload);
+         }
      }
-
-     var indexKeys = Builders<CouponDocument>.IndexKeys.Ascending(c => c.CouponCode);
-     var indexModel = new CreateIndexModel<CouponDocument>(
-         indexKeys,
-         new CreateIndexOptions { Unique = true, Name = CouponCodeIndexName });
-
-     await _collection.Indexes.CreateOneAsync(indexModel);
  }
 
- /// <summary>
- /// Fast existence check for a coupon code, backed by the unique index - stays cheap even
- /// with 10 lakh+ documents since it's an indexed equality lookup, not a collection scan.
- /// </summary>
- public async Task<bool> CouponExistsAsync(string couponCode)
+ public string Decrypt(string token)
  {
-     var filter = Builders<CouponDocument>.Filter.Eq(c => c.CouponCode, couponCode);
-     var found = await _collection.Find(filter).Limit(1).AnyAsync();
-     return found;
+     if (string.IsNullOrEmpty(token))
+     {
+         throw new ArgumentException("Value cannot be null or empty.", nameof(token));
+     }
+
+     var payload = FromBase64Url(token);
+
+     using (var aes = Aes.Create())
+     {
+         aes.Key = _key;
+         aes.Mode = CipherMode.CBC;
+         aes.Padding = PaddingMode.PKCS7;
+
+         var ivLength = aes.BlockSize / 8;
+         if (payload.Length <= ivLength)
+         {
+             throw new CryptographicException("Token is too short to contain a valid IV and ciphertext.");
+         }
+
+         var iv = new byte[ivLength];
+         Buffer.BlockCopy(payload, 0, iv, 0, ivLength);
+         aes.IV = iv;
+
+         var cipherBytes = new byte[payload.Length - ivLength];
+         Buffer.BlockCopy(payload, ivLength, cipherBytes, 0, cipherBytes.Length);
+
+         using (var decryptor = aes.CreateDecryptor())
+         {
+             var plainBytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
+             return System.Text.Encoding.UTF8.GetString(plainBytes);
+         }
+     }
  }
 
- /// <summary>
- /// Inserts the document. Returns false (instead of throwing) on a duplicate-key race, so the
- /// caller can just regenerate and retry rather than special-case a Mongo exception type.
- /// </summary>
- public async Task<bool> TryInsertAsync(CouponDocument document)
+ private static string ToBase64Url(byte[] data)
  {
-     try
+     return Convert.ToBase64String(data)
+         .TrimEnd('=')
+         .Replace('+', '-')
+         .Replace('/', '_');
+ }
+
+ private static byte[] FromBase64Url(string token)
+ {
+     var base64 = token.Replace('-', '+').Replace('_', '/');
+     switch (base64.Length % 4)
      {
-         await _collection.InsertOneAsync(document);
-         return true;
+         case 2: base64 += "=="; break;
+         case 3: base64 += "="; break;
      }
-     catch (MongoWriteException ex) when (ex.WriteError?.Category == ServerErrorCategory.DuplicateKey)
-     {
-         Log.Warning("Duplicate coupon code on insert, will retry: {CouponCode}", document.CouponCode);
-         return false;
-     }
+     return Convert.FromBase64String(base64);
  }
