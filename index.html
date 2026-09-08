@@ -1,15 +1,68 @@
-    public static void Configure(AppSettings settings)
-    {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .WriteTo.File(
-                path: settings.LogFilePath,
-                rollingInterval: RollingInterval.Day,
-                rollOnFileSizeLimit: true,
-                fileSizeLimitBytes: settings.LogFileSizeLimitMB * 1024L * 1024L,
-                retainedFileCountLimit: settings.LogRetainedFileCount,
-                shared: true,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-            .Enrich.FromLogContext()
-            .CreateLogger();
-    }
+ private const string CouponCodeIndexName = "ux_couponCode";
+ private const int DuplicateKeyErrorCode = 11000;
+
+ private readonly IMongoCollection<CouponDocument> _collection;
+
+ public MongoCouponRepository(string connectionString, string databaseName, string collectionName)
+ {
+     var client = new MongoClient(connectionString);
+     var database = client.GetDatabase(databaseName);
+     _collection = database.GetCollection<CouponDocument>(collectionName);
+ }
+
+ /// <summary>
+ /// Point 14: use the collection if it already exists, otherwise create it - then make sure
+ /// the unique index on couponCode exists either way. Safe to call on every startup
+ /// (CreateOneAsync/CreateCollection are no-ops when the target already exists in the way we need).
+ /// </summary>
+ public async Task EnsureCollectionAndIndexesAsync()
+ {
+     var database = _collection.Database;
+     var existingNames = await (await database.ListCollectionNamesAsync(
+         new ListCollectionNamesOptions
+         {
+             Filter = new MongoDB.Bson.BsonDocument("name", _collection.CollectionNamespace.CollectionName)
+         })).ToListAsync();
+
+     if (existingNames.Count == 0)
+     {
+         await database.CreateCollectionAsync(_collection.CollectionNamespace.CollectionName);
+         Log.Information("Created MongoDB collection {Collection}", _collection.CollectionNamespace.CollectionName);
+     }
+
+     var indexKeys = Builders<CouponDocument>.IndexKeys.Ascending(c => c.CouponCode);
+     var indexModel = new CreateIndexModel<CouponDocument>(
+         indexKeys,
+         new CreateIndexOptions { Unique = true, Name = CouponCodeIndexName });
+
+     await _collection.Indexes.CreateOneAsync(indexModel);
+ }
+
+ /// <summary>
+ /// Fast existence check for a coupon code, backed by the unique index - stays cheap even
+ /// with 10 lakh+ documents since it's an indexed equality lookup, not a collection scan.
+ /// </summary>
+ public async Task<bool> CouponExistsAsync(string couponCode)
+ {
+     var filter = Builders<CouponDocument>.Filter.Eq(c => c.CouponCode, couponCode);
+     var found = await _collection.Find(filter).Limit(1).AnyAsync();
+     return found;
+ }
+
+ /// <summary>
+ /// Inserts the document. Returns false (instead of throwing) on a duplicate-key race, so the
+ /// caller can just regenerate and retry rather than special-case a Mongo exception type.
+ /// </summary>
+ public async Task<bool> TryInsertAsync(CouponDocument document)
+ {
+     try
+     {
+         await _collection.InsertOneAsync(document);
+         return true;
+     }
+     catch (MongoWriteException ex) when (ex.WriteError?.Category == ServerErrorCategory.DuplicateKey)
+     {
+         Log.Warning("Duplicate coupon code on insert, will retry: {CouponCode}", document.CouponCode);
+         return false;
+     }
+ }
