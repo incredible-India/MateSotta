@@ -1,50 +1,23 @@
-        public AppSettings()
-        {
-            BaseUrl = Require("BaseUrl");
-            MongoConnectionString = Require("MongoConnectionString");
-            MongoDatabaseName = Require("MongoDatabaseName");
-            MongoCollectionName = Require("MongoCollectionName");
-            CouponValidityDays = RequireInt("CouponValidityDays");
-            MaxGenerationRetries = RequireInt("MaxGenerationRetries");
-            LogFilePath = Require("LogFilePath");
-            LogFileSizeLimitMB = RequireInt("LogFileSizeLimitMB");
-            LogRetainedFileCount = RequireInt("LogRetainedFileCount");
+ <appSettings>
+     <!-- Public base URL the QR code points to; final link is BaseUrl?uuid=<encryptedCode> -->
+     <add key="BaseUrl" value="https://example.com/claim" />
 
-            var keyBase64 = Require("EncryptionKeyBase64");
-            try
-            {
-                EncryptionKey = Convert.FromBase64String(keyBase64);
-            }
-            catch (FormatException ex)
-            {
-                throw new ConfigurationErrorsException("EncryptionKeyBase64 is not valid base64.", ex);
-            }
+     <!-- MongoDB connection -->
+     <add key="MongoConnectionString" value="mongodb://localhost:27017" />
+     <add key="MongoDatabaseName" value="CouponDb" />
+     <add key="MongoCollectionName" value="Coupons" />
 
-            if (EncryptionKey.Length != 32)
-            {
-                throw new ConfigurationErrorsException(
-                    $"EncryptionKeyBase64 must decode to 32 bytes (AES-256). Got {EncryptionKey.Length} bytes.");
-            }
-        }
+     <!-- AES-256 key, base64-encoded (32 bytes). CHANGE THIS PER ENVIRONMENT and keep it secret. -->
+     <add key="EncryptionKeyBase64" value="FIyWt3gH6hZvZFhuBcP9hxZdOmdibCzdpktgNIxabaw=" />
 
-        private static string Require(string key)
-        {
-            var value = ConfigurationManager.AppSettings[key];
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ConfigurationErrorsException($"Missing required appSetting '{key}' in App.config.");
-            }
-            return value;
-        }
+     <!-- How long a generated coupon stays valid -->
+     <add key="CouponValidityDays" value="365" />
 
-        private static int RequireInt(string key)
-        {
-            var raw = Require(key);
-            if (!int.TryParse(raw, out var value))
-            {
-                throw new ConfigurationErrorsException($"appSetting '{key}' must be an integer, got '{raw}'.");
-            }
-            return value;
-        }
-    }
-}
+     <!-- How many times to retry code generation on a (extremely unlikely) unique-index collision -->
+     <add key="MaxGenerationRetries" value="5" />
+
+     <!-- Logging -->
+     <add key="LogFilePath" value="logs\coupancode-.log" />
+     <add key="LogFileSizeLimitMB" value="50" />
+     <add key="LogRetainedFileCount" value="10" />
+ </appSettings>
