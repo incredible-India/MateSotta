@@ -1,48 +1,56 @@
-    public const int CodeLength = 16;
+ private readonly AppSettings _settings;
+ private readonly MongoCouponRepository _repository;
+ private readonly CodeEncryptor _encryptor;
 
-    private const string DigitChars = "0123456789";
-    private const string AlphaNumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+ public CouponLinkService(AppSettings settings, MongoCouponRepository repository, CodeEncryptor encryptor)
+ {
+     _settings = settings;
+     _repository = repository;
+     _encryptor = encryptor;
+ }
 
-    public static string Generate()
-    {
-        var sb = new StringBuilder(CodeLength);
+ /// <summary>
+ /// Generates one new, guaranteed-unique coupon, saves it, and returns the full URL to
+ /// embed in the QR code: BaseUrl?uuid=&lt;encryptedCode&gt;
+ /// </summary>
+ public async Task<string> GenerateCouponLinkAsync()
+ {
+     for (var attempt = 1; attempt <= _settings.MaxGenerationRetries; attempt++)
+     {
+         var code = CodeGenerator.Generate();
 
-        using (var rng = RandomNumberGenerator.Create())
-        {
-            sb.Append(DigitChars[GetRandomIndex(rng, DigitChars.Length)]);
+         // Belt-and-suspenders: check first (cheap, indexed) to avoid burning a duplicate-key
+         // error in the common case, but still handle the race via TryInsertAsync below,
+         // since two processes could both pass this check for the same code.
+         if (await _repository.CouponExistsAsync(code))
+         {
+             Log.Warning("Generated code already exists, regenerating (attempt {Attempt})", attempt);
+             continue;
+         }
 
-            for (var i = 1; i < CodeLength; i++)
-            {
-                sb.Append(AlphaNumericChars[GetRandomIndex(rng, AlphaNumericChars.Length)]);
-            }
-        }
+         var now = DateTime.UtcNow;
+         var document = new CouponDocument
+         {
+             CouponCode = code,
+             EncryptedCode = _encryptor.Encrypt(code),
+             IsRedeemed = false,
+             GeneratedAt = now,
+             ExpiresAt = now.AddDays(_settings.CouponValidityDays),
+             RedeemedAt = null
+         };
 
-        return sb.ToString();
-    }
+         var inserted = await _repository.TryInsertAsync(document);
+         if (!inserted)
+         {
+             Log.Warning("Insert hit a duplicate-key race, regenerating (attempt {Attempt})", attempt);
+             continue;
+         }
 
-    /// <summary>
-    /// Unbiased random index in [0, exclusiveUpperBound) via rejection sampling on a single byte.
-    /// exclusiveUpperBound must be <= 256 (true for both our alphabets).
-    /// </summary>
-    private static int GetRandomIndex(RandomNumberGenerator rng, int exclusiveUpperBound)
-    {
-        if (exclusiveUpperBound <= 0 || exclusiveUpperBound > 256)
-        {
-            throw new ArgumentOutOfRangeException(nameof(exclusiveUpperBound));
-        }
+         var url = $"{_settings.BaseUrl}?uuid={document.EncryptedCode}";
+         Log.Information("Generated coupon {CouponCode}, expires {ExpiresAt:u}", code, document.ExpiresAt);
+         return url;
+     }
 
-        // Largest multiple of exclusiveUpperBound that fits in a byte (0-255); values at or
-        // above this are discarded and re-rolled so every valid index has exactly equal odds.
-        var limit = (256 / exclusiveUpperBound) * exclusiveUpperBound;
-        var buffer = new byte[1];
-
-        int sample;
-        do
-        {
-            rng.GetBytes(buffer);
-            sample = buffer[0];
-        } while (sample >= limit);
-
-        return sample % exclusiveUpperBound;
-    }
-}
+     throw new InvalidOperationException(
+         $"Failed to generate a unique coupon code after {_settings.MaxGenerationRetries} attempts.");
+ }
