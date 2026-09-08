@@ -1,94 +1,48 @@
- private readonly byte[] _key;
+    public const int CodeLength = 16;
 
- public CodeEncryptor(byte[] key)
- {
-     if (key == null || key.Length != 32)
-     {
-         throw new ArgumentException("Encryption key must be 32 bytes (AES-256).", nameof(key));
-     }
-     _key = key;
- }
+    private const string DigitChars = "0123456789";
+    private const string AlphaNumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
- public string Encrypt(string plainCode)
- {
-     if (string.IsNullOrEmpty(plainCode))
-     {
-         throw new ArgumentException("Value cannot be null or empty.", nameof(plainCode));
-     }
+    public static string Generate()
+    {
+        var sb = new StringBuilder(CodeLength);
 
-     using (var aes = Aes.Create())
-     {
-         aes.Key = _key;
-         aes.Mode = CipherMode.CBC;
-         aes.Padding = PaddingMode.PKCS7;
-         aes.GenerateIV();
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            sb.Append(DigitChars[GetRandomIndex(rng, DigitChars.Length)]);
 
-         using (var encryptor = aes.CreateEncryptor())
-         {
-             var plainBytes = System.Text.Encoding.UTF8.GetBytes(plainCode);
-             var cipherBytes = encryptor.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
+            for (var i = 1; i < CodeLength; i++)
+            {
+                sb.Append(AlphaNumericChars[GetRandomIndex(rng, AlphaNumericChars.Length)]);
+            }
+        }
 
-             // IV + ciphertext, so decryption doesn't need the IV stored anywhere else.
-             var payload = new byte[aes.IV.Length + cipherBytes.Length];
-             Buffer.BlockCopy(aes.IV, 0, payload, 0, aes.IV.Length);
-             Buffer.BlockCopy(cipherBytes, 0, payload, aes.IV.Length, cipherBytes.Length);
+        return sb.ToString();
+    }
 
-             return ToBase64Url(payload);
-         }
-     }
- }
+    /// <summary>
+    /// Unbiased random index in [0, exclusiveUpperBound) via rejection sampling on a single byte.
+    /// exclusiveUpperBound must be <= 256 (true for both our alphabets).
+    /// </summary>
+    private static int GetRandomIndex(RandomNumberGenerator rng, int exclusiveUpperBound)
+    {
+        if (exclusiveUpperBound <= 0 || exclusiveUpperBound > 256)
+        {
+            throw new ArgumentOutOfRangeException(nameof(exclusiveUpperBound));
+        }
 
- public string Decrypt(string token)
- {
-     if (string.IsNullOrEmpty(token))
-     {
-         throw new ArgumentException("Value cannot be null or empty.", nameof(token));
-     }
+        // Largest multiple of exclusiveUpperBound that fits in a byte (0-255); values at or
+        // above this are discarded and re-rolled so every valid index has exactly equal odds.
+        var limit = (256 / exclusiveUpperBound) * exclusiveUpperBound;
+        var buffer = new byte[1];
 
-     var payload = FromBase64Url(token);
+        int sample;
+        do
+        {
+            rng.GetBytes(buffer);
+            sample = buffer[0];
+        } while (sample >= limit);
 
-     using (var aes = Aes.Create())
-     {
-         aes.Key = _key;
-         aes.Mode = CipherMode.CBC;
-         aes.Padding = PaddingMode.PKCS7;
-
-         var ivLength = aes.BlockSize / 8;
-         if (payload.Length <= ivLength)
-         {
-             throw new CryptographicException("Token is too short to contain a valid IV and ciphertext.");
-         }
-
-         var iv = new byte[ivLength];
-         Buffer.BlockCopy(payload, 0, iv, 0, ivLength);
-         aes.IV = iv;
-
-         var cipherBytes = new byte[payload.Length - ivLength];
-         Buffer.BlockCopy(payload, ivLength, cipherBytes, 0, cipherBytes.Length);
-
-         using (var decryptor = aes.CreateDecryptor())
-         {
-             var plainBytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
-             return System.Text.Encoding.UTF8.GetString(plainBytes);
-         }
-     }
- }
-
- private static string ToBase64Url(byte[] data)
- {
-     return Convert.ToBase64String(data)
-         .TrimEnd('=')
-         .Replace('+', '-')
-         .Replace('/', '_');
- }
-
- private static byte[] FromBase64Url(string token)
- {
-     var base64 = token.Replace('-', '+').Replace('_', '/');
-     switch (base64.Length % 4)
-     {
-         case 2: base64 += "=="; break;
-         case 3: base64 += "="; break;
-     }
-     return Convert.FromBase64String(base64);
- }
+        return sample % exclusiveUpperBound;
+    }
+}
