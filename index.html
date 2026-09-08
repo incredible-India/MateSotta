@@ -1,28 +1,61 @@
-    var settings = new AppSettings();
-    LoggerSetup.Configure(settings);
+// Node.js counterpart to coupancode/Security/CodeEncryptor.cs (Decrypt).
+// Token format: base64url(IV(16 bytes) + AES-256-CBC ciphertext), PKCS7 padding.
+//
+// Usage:
+//   EncryptionKeyBase64=<same value as App.config> node decryptCoupon.js <token>
+//
+// The key must be the exact same EncryptionKeyBase64 used by the C# app
+// (App.config), decoding to 32 bytes. Never hardcode it here or commit it.
 
-    try
-    {
-        var repository = new MongoCouponRepository(
-            settings.MongoConnectionString, settings.MongoDatabaseName, settings.MongoCollectionName);
-        var encryptor = new CodeEncryptor(settings.EncryptionKey);
-        var service = new CouponLinkService(settings, repository, encryptor);
+const crypto = require('crypto');
 
-        repository.EnsureCollectionAndIndexesAsync().GetAwaiter().GetResult();
-
-        var url = service.GenerateCouponLinkAsync().GetAwaiter().GetResult();
-
-        Console.WriteLine(url);
-        return 0;
-    }
-    catch (Exception ex)
-    {
-        Log.Error(ex, "Coupon generation failed");
-        Console.Error.WriteLine("Failed to generate coupon link. See log file for details.");
-        return 1;
-    }
-    finally
-    {
-        Log.CloseAndFlush();
-    }
+function base64UrlToBuffer(token) {
+  let base64 = token.replace(/-/g, '+').replace(/_/g, '/');
+  const pad = base64.length % 4;
+  if (pad === 2) base64 += '==';
+  else if (pad === 3) base64 += '=';
+  return Buffer.from(base64, 'base64');
 }
+
+function decryptCoupon(token, keyBase64) {
+  const key = Buffer.from(keyBase64, 'base64');
+  if (key.length !== 32) {
+    throw new Error(`EncryptionKeyBase64 must decode to 32 bytes (AES-256). Got ${key.length}.`);
+  }
+
+  const payload = base64UrlToBuffer(token);
+  const ivLength = 16; // AES block size
+  if (payload.length <= ivLength) {
+    throw new Error('Token is too short to contain a valid IV and ciphertext.');
+  }
+
+  const iv = payload.subarray(0, ivLength);
+  const cipherBytes = payload.subarray(ivLength);
+
+  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+  const plainBytes = Buffer.concat([decipher.update(cipherBytes), decipher.final()]);
+  return plainBytes.toString('utf8');
+}
+
+if (require.main === module) {
+  const token = process.argv[2];
+  const keyBase64 = process.env.EncryptionKeyBase64;
+
+  if (!token) {
+    console.error('Usage: node decryptCoupon.js <token>');
+    process.exit(1);
+  }
+  if (!keyBase64) {
+    console.error('Set EncryptionKeyBase64 env var to the same key used in App.config.');
+    process.exit(1);
+  }
+
+  try {
+    console.log(decryptCoupon(token, keyBase64));
+  } catch (err) {
+    console.error('Decryption failed:', err.message);
+    process.exit(1);
+  }
+}
+
+module.exports = { decryptCoupon };
