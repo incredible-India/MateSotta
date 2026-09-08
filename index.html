@@ -1,23 +1,15 @@
- <appSettings>
-     <!-- Public base URL the QR code points to; final link is BaseUrl?uuid=<encryptedCode> -->
-     <add key="BaseUrl" value="https://example.com/claim" />
-
-     <!-- MongoDB connection -->
-     <add key="MongoConnectionString" value="mongodb://localhost:27017" />
-     <add key="MongoDatabaseName" value="CouponDb" />
-     <add key="MongoCollectionName" value="Coupons" />
-
-     <!-- AES-256 key, base64-encoded (32 bytes). CHANGE THIS PER ENVIRONMENT and keep it secret. -->
-     <add key="EncryptionKeyBase64" value="FIyWt3gH6hZvZFhuBcP9hxZdOmdibCzdpktgNIxabaw=" />
-
-     <!-- How long a generated coupon stays valid -->
-     <add key="CouponValidityDays" value="365" />
-
-     <!-- How many times to retry code generation on a (extremely unlikely) unique-index collision -->
-     <add key="MaxGenerationRetries" value="5" />
-
-     <!-- Logging -->
-     <add key="LogFilePath" value="logs\coupancode-.log" />
-     <add key="LogFileSizeLimitMB" value="50" />
-     <add key="LogRetainedFileCount" value="10" />
- </appSettings>
+    public static void Configure(AppSettings settings)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.File(
+                path: settings.LogFilePath,
+                rollingInterval: RollingInterval.Day,
+                rollOnFileSizeLimit: true,
+                fileSizeLimitBytes: settings.LogFileSizeLimitMB * 1024L * 1024L,
+                retainedFileCountLimit: settings.LogRetainedFileCount,
+                shared: true,
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+            .Enrich.FromLogContext()
+            .CreateLogger();
+    }
