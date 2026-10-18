@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Nandita Sahoo ✨</title>
+<title>Nandita Sahoo | Next Chapter</title>
 
 <style>
 * {
@@ -13,9 +14,9 @@
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #080914;
-    color: white;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #080b12;
+    color: #f1f5f9;
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -23,13 +24,13 @@ body {
 body::before {
     content: "";
     position: fixed;
-    width: 350px;
-    height: 350px;
-    background: #7c3aed;
+    width: 400px;
+    height: 400px;
+    background: #075985;
     filter: blur(150px);
-    opacity: .35;
-    top: -100px;
-    left: -100px;
+    opacity: .3;
+    top: -150px;
+    right: -100px;
     z-index: -1;
 }
 
@@ -38,175 +39,203 @@ body::after {
     position: fixed;
     width: 350px;
     height: 350px;
-    background: #06b6d4;
+    background: #047857;
     filter: blur(150px);
-    opacity: .20;
+    opacity: .18;
     bottom: -100px;
-    right: -100px;
+    left: -100px;
     z-index: -1;
 }
 
 .container {
+    max-width: 950px;
     width: 90%;
-    max-width: 850px;
     margin: auto;
     padding: 65px 0;
-    text-align: center;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 80px;
+    color: #94a3b8;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+.status {
+    color: #4ade80;
+}
+
+.status::before {
+    content: "● ";
 }
 
 .tag {
-    display: inline-block;
-    padding: 9px 17px;
-    border: 1px solid #ffffff25;
-    border-radius: 50px;
-    color: #c4b5fd;
+    color: #38bdf8;
     font-size: 12px;
-    letter-spacing: 2px;
-    margin-bottom: 30px;
-    background: #ffffff08;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
 }
 
 h1 {
-    font-size: clamp(38px, 8vw, 76px);
-    line-height: 1.12;
-    margin-bottom: 20px;
-    letter-spacing: -2px;
+    font-size: clamp(42px, 8vw, 82px);
+    line-height: 1.08;
+    letter-spacing: -3px;
+    margin-bottom: 25px;
 }
 
 h1 span {
-    background: linear-gradient(90deg, #c4b5fd, #67e8f9);
-    -webkit-background-clip: text;
-    color: transparent;
+    color: #38bdf8;
 }
 
-.subtitle {
-    color: #a5a6bc;
+.intro {
+    color: #94a3b8;
     font-size: 17px;
     line-height: 1.8;
-    max-width: 580px;
-    margin: auto;
+    max-width: 620px;
 }
 
-.card {
-    margin-top: 38px;
-    padding: 32px;
-    background: linear-gradient(135deg,
-        #ffffff12, #ffffff04);
-    border: 1px solid #ffffff1c;
-    border-radius: 24px;
-    text-align: left;
-    box-shadow: 0 20px 70px #00000030;
-    backdrop-filter: blur(12px);
+.divider {
+    height: 1px;
+    background: #1e293b;
+    margin: 45px 0;
 }
 
-.card h2 {
-    font-size: 22px;
+.section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #38bdf8;
     margin-bottom: 18px;
 }
 
-.card p {
-    color: #c4c5d5;
-    font-size: 15px;
+h2 {
+    font-size: 27px;
+    margin-bottom: 18px;
+}
+
+p {
+    color: #aab6c8;
     line-height: 1.9;
-    margin-bottom: 12px;
+    font-size: 15px;
 }
 
 .highlight {
-    color: #67e8f9;
+    color: #f8fafc;
     font-weight: 600;
 }
 
-.quote {
-    font-size: clamp(21px, 4vw, 30px);
-    line-height: 1.6;
-    font-weight: 600;
-    text-align: center;
-    margin: 38px 0;
-}
-
-.quote span {
-    color: #c4b5fd;
-}
-
-.steps {
+.grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-top: 25px;
+    gap: 16px;
+    margin: 30px 0;
 }
 
-.step {
-    padding: 22px 12px;
-    border-radius: 18px;
-    background: #ffffff08;
-    border: 1px solid #ffffff12;
+.card {
+    padding: 25px;
+    background: #111827bb;
+    border: 1px solid #263447;
+    border-radius: 14px;
+    transition: .25s;
 }
 
-.step .emoji {
-    font-size: 27px;
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #38bdf8;
+}
+
+.number {
+    color: #38bdf8;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 22px;
+}
+
+.card h3 {
+    font-size: 17px;
     margin-bottom: 12px;
 }
 
-.step h3 {
-    font-size: 15px;
-    margin-bottom: 8px;
+.card p {
+    font-size: 13px;
+    line-height: 1.8;
 }
 
-.step p {
-    color: #a5a6bc;
-    font-size: 12px;
-    line-height: 1.6;
-}
-
-.button {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 15px 28px;
-    border-radius: 50px;
-    background: linear-gradient(90deg, #7c3aed, #0891b2);
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    transition: .3s;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-}
-
-.button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 35px #7c3aed55;
-}
-
-#message {
-    display: none;
+.quote {
+    padding: 28px;
+    border-left: 3px solid #38bdf8;
+    background: #0f172a;
     margin-top: 25px;
-    padding: 25px;
-    border-radius: 18px;
-    background: #ffffff0b;
-    border: 1px solid #c4b5fd50;
-    color: #e9d5ff;
+    font-size: clamp(20px, 4vw, 29px);
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+.quote span {
+    color: #38bdf8;
+}
+
+.referral {
+    background: linear-gradient(120deg, #0c2230, #101827);
+    border: 1px solid #164e63;
+    border-radius: 16px;
+    padding: 30px;
+    margin-top: 35px;
+}
+
+.referral h2 {
+    font-size: 22px;
+}
+
+button {
+    margin-top: 25px;
+    padding: 14px 22px;
+    border-radius: 7px;
+    border: 1px solid #38bdf8;
+    color: #38bdf8;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    transition: .25s;
+}
+
+button:hover {
+    color: #080b12;
+    background: #38bdf8;
+}
+
+#note {
+    display: none;
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 9px;
+    background: #080f1b;
+    color: #dbeafe;
     line-height: 1.9;
-    animation: appear .7s ease;
+    border: 1px solid #263447;
 }
 
 footer {
-    margin-top: 55px;
-    color: #777990;
-    font-size: 13px;
-    line-height: 2;
+    margin-top: 65px;
+    border-top: 1px solid #1e293b;
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    color: #64748b;
+    font-size: 12px;
 }
 
-@keyframes appear {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@media(max-width: 600px) {
-    .container { padding: 45px 0; }
-    .card { padding: 23px; }
-    .steps { grid-template-columns: 1fr; }
-    h1 { letter-spacing: -1px; }
+@media(max-width: 650px) {
+    .container { padding-top: 35px; }
+    .nav { margin-bottom: 60px; }
+    .grid { grid-template-columns: 1fr; }
+    h1 { letter-spacing: -1.5px; }
+    .card { padding: 22px; }
 }
 </style>
 </head>
@@ -214,100 +243,133 @@ footer {
 <body>
 <main class="container">
 
-    <div class="tag">✨ A LITTLE REMINDER FOR YOU</div>
+    <nav class="nav">
+        <div>CAREER // NEXT CHAPTER</div>
+        <div class="status">POTENTIAL IN PROGRESS</div>
+    </nav>
 
-    <h1>Dear <span>Nandita Sahoo</span>,<br>
-    Your story isn't over.</h1>
+    <div class="tag">A NOTE FOR NANDITA SAHOO</div>
 
-    <p class="subtitle">
-        Sometimes life delays the things we want most,
-        not to defeat us, but to teach us how strong we can be.
+    <h1>Your career.<br>
+    Your pace.<br>
+    <span>Your next move.</span></h1>
+
+    <p class="intro">
+        Every professional journey has uncertain phases.
+        The important thing is not how quickly you get there,
+        but how you prepare yourself for the opportunities ahead.
     </p>
 
-    <section class="card">
-        <h2>💜 First, remember this.</h2>
+    <div class="divider"></div>
 
-        <p>
-            I know the job search hasn't been easy.
-            Rejections, waiting, and uncertainty can make even
-            the strongest person question themselves.
-        </p>
+    <div class="section-label">01 / THE REALITY</div>
 
-        <p>
-            But please don't confuse a difficult phase with your
-            worth. <span class="highlight">A delayed opportunity
-            is not a measure of your talent.</span>
-        </p>
+    <h2>A job search is a phase, not your identity.</h2>
 
-        <p>
-            I referred you to Deloitte because I genuinely want
-            to see you get a good opportunity. I can't promise
-            the outcome, but I hope you keep believing in yourself
-            and keep moving forward.
-        </p>
-    </section>
+    <p>
+        Not getting the right opportunity yet doesn't mean you
+        lack the ability to succeed. Hiring depends on many
+        factors — timing, role requirements, competition, and fit.
+        Don't let temporary results define your long-term potential.
+    </p>
 
     <div class="quote">
-        "You are not behind in life.<br>
-        <span>You are building your own timeline.</span>"
+        "Don't measure your potential by your current situation.
+        <span>Measure it by what you're building next.</span>"
     </div>
 
-    <h2 style="font-size:25px;">Your next chapter starts with you.</h2>
+    <div class="divider"></div>
 
-    <div class="steps">
-        <div class="step">
-            <div class="emoji">🌱</div>
-            <h3>Keep Growing</h3>
-            <p>Learn a little every day. Small progress counts.</p>
+    <div class="section-label">02 / YOUR STRATEGY</div>
+
+    <h2>Focus on what you can control.</h2>
+
+    <div class="grid">
+        <div class="card">
+            <div class="number">01 — SKILLS</div>
+            <h3>Keep Improving</h3>
+            <p>
+                Strengthen your fundamentals, practice interviews,
+                and keep learning skills relevant to your target roles.
+            </p>
         </div>
 
-        <div class="step">
-            <div class="emoji">⚡</div>
-            <h3>Keep Trying</h3>
-            <p>One opportunity can change the direction of your journey.</p>
+        <div class="card">
+            <div class="number">02 — CONSISTENCY</div>
+            <h3>Keep Showing Up</h3>
+            <p>
+                Apply strategically, follow up professionally,
+                and make progress even when results take time.
+            </p>
         </div>
 
-        <div class="step">
-            <div class="emoji">💎</div>
-            <h3>Know Your Worth</h3>
-            <p>Your value is bigger than any interview result.</p>
+        <div class="card">
+            <div class="number">03 — MINDSET</div>
+            <h3>Stay Adaptable</h3>
+            <p>
+                Take feedback, learn from every interview,
+                and treat setbacks as information, not failure.
+            </p>
         </div>
     </div>
 
-    <button class="button" onclick="showMessage()">
-        A little message for you ✨
-    </button>
+    <div class="referral">
+        <div class="section-label">03 / A SMALL STEP FORWARD</div>
 
-    <div id="message">
-        Nandita, please don't give up on yourself. ❤️<br>
-        I hope one day you'll look back at this phase and
-        feel proud that you kept going even when things were hard.
-        <br><br>
-        Keep faith, keep working, and give yourself time.
-        <br>
-        <strong>Your next opportunity could be closer than you think.</strong>
-        <br><br>
-        — Someone who is rooting for you 🌷
+        <h2>About Deloitte</h2>
+
+        <p>
+            I've referred you to Deloitte because I wanted to
+            help you explore another opportunity. Now, keep
+            preparing and give yourself the best possible chance.
+            The selection outcome isn't in our hands, but your
+            preparation and persistence are.
+        </p>
+
+        <button onclick="showNote()">
+            Open a personal note →
+        </button>
+
+        <div id="note">
+            Nandita, just a reminder: don't be too hard on yourself
+            during this phase. Keep your skills sharp, stay open
+            to opportunities, and keep moving forward.
+            <br><br>
+            All the best for your career. Keep going — you've got
+            your own journey to build.
+            <br><br>
+            — Himanshu
+        </div>
     </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">04 / FINAL THOUGHT</div>
+
+    <h2>Build the next chapter. One step at a time.</h2>
+
+    <p>
+        No unnecessary pressure. No comparison with anyone else's
+        timeline. Just consistent effort, better preparation,
+        and the confidence to try again.
+    </p>
 
     <footer>
-        Made with good wishes and positive energy.<br>
-        One tough chapter doesn't define the whole story. ✨
+        <span>PERSONAL NOTE // 001</span>
+        <span>Stay focused. Stay consistent.</span>
     </footer>
 
 </main>
 
 <script>
-function showMessage() {
-    const message = document.getElementById("message");
-    message.style.display = "block";
-    message.scrollIntoView({
+function showNote() {
+    const note = document.getElementById("note");
+    note.style.display = "block";
+    note.scrollIntoView({
         behavior: "smooth",
         block: "center"
     });
 }
 </script>
-
 </body>
-                     </html>
-                     
+</html>
