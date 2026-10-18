@@ -1,61 +1,313 @@
-// Node.js counterpart to coupancode/Security/CodeEncryptor.cs (Decrypt).
-// Token format: base64url(IV(16 bytes) + AES-256-CBC ciphertext), PKCS7 padding.
-//
-// Usage:
-//   EncryptionKeyBase64=<same value as App.config> node decryptCoupon.js <token>
-//
-// The key must be the exact same EncryptionKeyBase64 used by the C# app
-// (App.config), decoding to 32 bytes. Never hardcode it here or commit it.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Nandita Sahoo ✨</title>
 
-const crypto = require('crypto');
-
-function base64UrlToBuffer(token) {
-  let base64 = token.replace(/-/g, '+').replace(/_/g, '/');
-  const pad = base64.length % 4;
-  if (pad === 2) base64 += '==';
-  else if (pad === 3) base64 += '=';
-  return Buffer.from(base64, 'base64');
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-function decryptCoupon(token, keyBase64) {
-  const key = Buffer.from(keyBase64, 'base64');
-  if (key.length !== 32) {
-    throw new Error(`EncryptionKeyBase64 must decode to 32 bytes (AES-256). Got ${key.length}.`);
-  }
-
-  const payload = base64UrlToBuffer(token);
-  const ivLength = 16; // AES block size
-  if (payload.length <= ivLength) {
-    throw new Error('Token is too short to contain a valid IV and ciphertext.');
-  }
-
-  const iv = payload.subarray(0, ivLength);
-  const cipherBytes = payload.subarray(ivLength);
-
-  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-  const plainBytes = Buffer.concat([decipher.update(cipherBytes), decipher.final()]);
-  return plainBytes.toString('utf8');
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #080914;
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-if (require.main === module) {
-  const token = process.argv[2];
-  const keyBase64 = process.env.EncryptionKeyBase64;
-
-  if (!token) {
-    console.error('Usage: node decryptCoupon.js <token>');
-    process.exit(1);
-  }
-  if (!keyBase64) {
-    console.error('Set EncryptionKeyBase64 env var to the same key used in App.config.');
-    process.exit(1);
-  }
-
-  try {
-    console.log(decryptCoupon(token, keyBase64));
-  } catch (err) {
-    console.error('Decryption failed:', err.message);
-    process.exit(1);
-  }
+body::before {
+    content: "";
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    background: #7c3aed;
+    filter: blur(150px);
+    opacity: .35;
+    top: -100px;
+    left: -100px;
+    z-index: -1;
 }
 
-module.exports = { decryptCoupon };
+body::after {
+    content: "";
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    background: #06b6d4;
+    filter: blur(150px);
+    opacity: .20;
+    bottom: -100px;
+    right: -100px;
+    z-index: -1;
+}
+
+.container {
+    width: 90%;
+    max-width: 850px;
+    margin: auto;
+    padding: 65px 0;
+    text-align: center;
+}
+
+.tag {
+    display: inline-block;
+    padding: 9px 17px;
+    border: 1px solid #ffffff25;
+    border-radius: 50px;
+    color: #c4b5fd;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    background: #ffffff08;
+}
+
+h1 {
+    font-size: clamp(38px, 8vw, 76px);
+    line-height: 1.12;
+    margin-bottom: 20px;
+    letter-spacing: -2px;
+}
+
+h1 span {
+    background: linear-gradient(90deg, #c4b5fd, #67e8f9);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    color: #a5a6bc;
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 580px;
+    margin: auto;
+}
+
+.card {
+    margin-top: 38px;
+    padding: 32px;
+    background: linear-gradient(135deg,
+        #ffffff12, #ffffff04);
+    border: 1px solid #ffffff1c;
+    border-radius: 24px;
+    text-align: left;
+    box-shadow: 0 20px 70px #00000030;
+    backdrop-filter: blur(12px);
+}
+
+.card h2 {
+    font-size: 22px;
+    margin-bottom: 18px;
+}
+
+.card p {
+    color: #c4c5d5;
+    font-size: 15px;
+    line-height: 1.9;
+    margin-bottom: 12px;
+}
+
+.highlight {
+    color: #67e8f9;
+    font-weight: 600;
+}
+
+.quote {
+    font-size: clamp(21px, 4vw, 30px);
+    line-height: 1.6;
+    font-weight: 600;
+    text-align: center;
+    margin: 38px 0;
+}
+
+.quote span {
+    color: #c4b5fd;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 25px;
+}
+
+.step {
+    padding: 22px 12px;
+    border-radius: 18px;
+    background: #ffffff08;
+    border: 1px solid #ffffff12;
+}
+
+.step .emoji {
+    font-size: 27px;
+    margin-bottom: 12px;
+}
+
+.step h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.step p {
+    color: #a5a6bc;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 15px 28px;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #7c3aed, #0891b2);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: .3s;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 35px #7c3aed55;
+}
+
+#message {
+    display: none;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 18px;
+    background: #ffffff0b;
+    border: 1px solid #c4b5fd50;
+    color: #e9d5ff;
+    line-height: 1.9;
+    animation: appear .7s ease;
+}
+
+footer {
+    margin-top: 55px;
+    color: #777990;
+    font-size: 13px;
+    line-height: 2;
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media(max-width: 600px) {
+    .container { padding: 45px 0; }
+    .card { padding: 23px; }
+    .steps { grid-template-columns: 1fr; }
+    h1 { letter-spacing: -1px; }
+}
+</style>
+</head>
+
+<body>
+<main class="container">
+
+    <div class="tag">✨ A LITTLE REMINDER FOR YOU</div>
+
+    <h1>Dear <span>Nandita Sahoo</span>,<br>
+    Your story isn't over.</h1>
+
+    <p class="subtitle">
+        Sometimes life delays the things we want most,
+        not to defeat us, but to teach us how strong we can be.
+    </p>
+
+    <section class="card">
+        <h2>💜 First, remember this.</h2>
+
+        <p>
+            I know the job search hasn't been easy.
+            Rejections, waiting, and uncertainty can make even
+            the strongest person question themselves.
+        </p>
+
+        <p>
+            But please don't confuse a difficult phase with your
+            worth. <span class="highlight">A delayed opportunity
+            is not a measure of your talent.</span>
+        </p>
+
+        <p>
+            I referred you to Deloitte because I genuinely want
+            to see you get a good opportunity. I can't promise
+            the outcome, but I hope you keep believing in yourself
+            and keep moving forward.
+        </p>
+    </section>
+
+    <div class="quote">
+        "You are not behind in life.<br>
+        <span>You are building your own timeline.</span>"
+    </div>
+
+    <h2 style="font-size:25px;">Your next chapter starts with you.</h2>
+
+    <div class="steps">
+        <div class="step">
+            <div class="emoji">🌱</div>
+            <h3>Keep Growing</h3>
+            <p>Learn a little every day. Small progress counts.</p>
+        </div>
+
+        <div class="step">
+            <div class="emoji">⚡</div>
+            <h3>Keep Trying</h3>
+            <p>One opportunity can change the direction of your journey.</p>
+        </div>
+
+        <div class="step">
+            <div class="emoji">💎</div>
+            <h3>Know Your Worth</h3>
+            <p>Your value is bigger than any interview result.</p>
+        </div>
+    </div>
+
+    <button class="button" onclick="showMessage()">
+        A little message for you ✨
+    </button>
+
+    <div id="message">
+        Nandita, please don't give up on yourself. ❤️<br>
+        I hope one day you'll look back at this phase and
+        feel proud that you kept going even when things were hard.
+        <br><br>
+        Keep faith, keep working, and give yourself time.
+        <br>
+        <strong>Your next opportunity could be closer than you think.</strong>
+        <br><br>
+        — Someone who is rooting for you 🌷
+    </div>
+
+    <footer>
+        Made with good wishes and positive energy.<br>
+        One tough chapter doesn't define the whole story. ✨
+    </footer>
+
+</main>
+
+<script>
+function showMessage() {
+    const message = document.getElementById("message");
+    message.style.display = "block";
+    message.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+</script>
+
+</body>
+                     </html>
+                     
