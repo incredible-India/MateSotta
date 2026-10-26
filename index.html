@@ -4,372 +4,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nandita Sahoo | Next Chapter</title>
+<title>Suno Na 😂</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    * {
+        box-sizing: border-box;
+    }
 
-body {
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: #080b12;
-    color: #f1f5f9;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #ffe0ec, #e0e7ff);
+        color: #29233d;
+    }
 
-body::before {
-    content: "";
-    position: fixed;
-    width: 400px;
-    height: 400px;
-    background: #075985;
-    filter: blur(150px);
-    opacity: .3;
-    top: -150px;
-    right: -100px;
-    z-index: -1;
-}
+    .card {
+        width: 100%;
+        max-width: 520px;
+        background: white;
+        padding: 28px;
+        border-radius: 24px;
+        box-shadow: 0 15px 40px #6c63a333;
+        border: 2px solid #ffffff;
+        animation: pop 0.6s ease;
+    }
 
-body::after {
-    content: "";
-    position: fixed;
-    width: 350px;
-    height: 350px;
-    background: #047857;
-    filter: blur(150px);
-    opacity: .18;
-    bottom: -100px;
-    left: -100px;
-    z-index: -1;
-}
+    .emoji {
+        font-size: 42px;
+        text-align: center;
+    }
 
-.container {
-    max-width: 950px;
-    width: 90%;
-    margin: auto;
-    padding: 65px 0;
-}
+    h1 {
+        text-align: center;
+        color: #8b5cf6;
+        margin: 8px 0;
+        font-size: 30px;
+    }
 
-.nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 80px;
-    color: #94a3b8;
-    font-size: 12px;
-    letter-spacing: 2px;
-}
+    .subtitle {
+        text-align: center;
+        color: #777;
+        margin-bottom: 24px;
+    }
 
-.status {
-    color: #4ade80;
-}
+    .message {
+        background: #faf5ff;
+        border-left: 5px solid #a78bfa;
+        padding: 18px;
+        border-radius: 12px;
+        line-height: 1.8;
+        font-size: 15px;
+    }
 
-.status::before {
-    content: "● ";
-}
+    .highlight {
+        color: #7c3aed;
+        font-weight: bold;
+    }
 
-.tag {
-    color: #38bdf8;
-    font-size: 12px;
-    letter-spacing: 3px;
-    margin-bottom: 25px;
-}
+    .fun {
+        margin-top: 18px;
+        background: #fff7ed;
+        padding: 14px;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 14px;
+    }
 
-h1 {
-    font-size: clamp(42px, 8vw, 82px);
-    line-height: 1.08;
-    letter-spacing: -3px;
-    margin-bottom: 25px;
-}
+    button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 13px;
+        border: none;
+        border-radius: 12px;
+        background: #8b5cf6;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
 
-h1 span {
-    color: #38bdf8;
-}
+    button:hover {
+        background: #7c3aed;
+    }
 
-.intro {
-    color: #94a3b8;
-    font-size: 17px;
-    line-height: 1.8;
-    max-width: 620px;
-}
-
-.divider {
-    height: 1px;
-    background: #1e293b;
-    margin: 45px 0;
-}
-
-.section-label {
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: #38bdf8;
-    margin-bottom: 18px;
-}
-
-h2 {
-    font-size: 27px;
-    margin-bottom: 18px;
-}
-
-p {
-    color: #aab6c8;
-    line-height: 1.9;
-    font-size: 15px;
-}
-
-.highlight {
-    color: #f8fafc;
-    font-weight: 600;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin: 30px 0;
-}
-
-.card {
-    padding: 25px;
-    background: #111827bb;
-    border: 1px solid #263447;
-    border-radius: 14px;
-    transition: .25s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    border-color: #38bdf8;
-}
-
-.number {
-    color: #38bdf8;
-    font-size: 12px;
-    letter-spacing: 2px;
-    margin-bottom: 22px;
-}
-
-.card h3 {
-    font-size: 17px;
-    margin-bottom: 12px;
-}
-
-.card p {
-    font-size: 13px;
-    line-height: 1.8;
-}
-
-.quote {
-    padding: 28px;
-    border-left: 3px solid #38bdf8;
-    background: #0f172a;
-    margin-top: 25px;
-    font-size: clamp(20px, 4vw, 29px);
-    line-height: 1.6;
-    font-weight: 600;
-}
-
-.quote span {
-    color: #38bdf8;
-}
-
-.referral {
-    background: linear-gradient(120deg, #0c2230, #101827);
-    border: 1px solid #164e63;
-    border-radius: 16px;
-    padding: 30px;
-    margin-top: 35px;
-}
-
-.referral h2 {
-    font-size: 22px;
-}
-
-button {
-    margin-top: 25px;
-    padding: 14px 22px;
-    border-radius: 7px;
-    border: 1px solid #38bdf8;
-    color: #38bdf8;
-    background: transparent;
-    cursor: pointer;
-    font-size: 14px;
-    transition: .25s;
-}
-
-button:hover {
-    color: #080b12;
-    background: #38bdf8;
-}
-
-#note {
-    display: none;
-    margin-top: 22px;
-    padding: 20px;
-    border-radius: 9px;
-    background: #080f1b;
-    color: #dbeafe;
-    line-height: 1.9;
-    border: 1px solid #263447;
-}
-
-footer {
-    margin-top: 65px;
-    border-top: 1px solid #1e293b;
-    padding-top: 25px;
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    flex-wrap: wrap;
-    color: #64748b;
-    font-size: 12px;
-}
-
-@media(max-width: 650px) {
-    .container { padding-top: 35px; }
-    .nav { margin-bottom: 60px; }
-    .grid { grid-template-columns: 1fr; }
-    h1 { letter-spacing: -1.5px; }
-    .card { padding: 22px; }
-}
+    @keyframes pop {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
 </style>
 </head>
 
 <body>
-<main class="container">
 
-    <nav class="nav">
-        <div>CAREER // NEXT CHAPTER</div>
-        <div class="status">POTENTIAL IN PROGRESS</div>
-    </nav>
+<div class="card">
+    <div class="emoji">🥹💻😂</div>
 
-    <div class="tag">A NOTE FOR NANDITA SAHOO</div>
+    <h1>Hi KD, suno na!</h1>
+    <p class="subtitle">Ek chhota sa morning mission hai 😜</p>
 
-    <h1>Your career.<br>
-    Your pace.<br>
-    <span>Your next move.</span></h1>
+    <div class="message">
+        Hi KD, <span class="highlight">suno na</span> ❤️
 
-    <p class="intro">
-        Every professional journey has uncertain phases.
-        The important thing is not how quickly you get there,
-        but how you prepare yourself for the opportunities ahead.
-    </p>
+        <br><br>
 
-    <div class="divider"></div>
+        Aaj morning call mein Manohar ko bol dena ki
+        <span class="highlight">saare epics complete ho gaye hain</span>.
+        Maine abhi just push kiya hai.
 
-    <div class="section-label">01 / THE REALITY</div>
+        <br><br>
 
-    <h2>A job search is a phase, not your identity.</h2>
+        Bolna ki Himanshu ko Claude ke saath thoda issue face karna pada
+        isliye uska poora din nikal gaya 😂
 
-    <p>
-        Not getting the right opportunity yet doesn't mean you
-        lack the ability to succeed. Hiring depends on many
-        factors — timing, role requirements, competition, and fit.
-        Don't let temporary results define your long-term potential.
-    </p>
+        <br><br>
 
-    <div class="quote">
-        "Don't measure your potential by your current situation.
-        <span>Measure it by what you're building next.</span>"
+        Total 7 user stories pending thi.
+        Himanshu ne 2 complete ki aur maine 5 complete kar di.
+        Saath mein <span class="highlight">CI aur Rancher ka kaam bhi</span>
+        kar diya, including Docker files.
+
+        <br><br>
+
+        Maine apna personal Claude use kiya tha kaam complete karne ke liye.
+        But woh $23 wala plan bhi exhaust ho gaya hai 🥲
+        Ab Claude bhi bol raha hai: bhai bas kar aaj ke liye 😂
+
+        <br><br>
+
+        Aaj Figma MCP setup karenge taaki UI ka visual drift fix kar sakein.
+        Abhi UI thoda Figma se different hai na, toh MCP se usko
+        match karne ki try karenge.
     </div>
 
-    <div class="divider"></div>
-
-    <div class="section-label">02 / YOUR STRATEGY</div>
-
-    <h2>Focus on what you can control.</h2>
-
-    <div class="grid">
-        <div class="card">
-            <div class="number">01 — SKILLS</div>
-            <h3>Keep Improving</h3>
-            <p>
-                Strengthen your fundamentals, practice interviews,
-                and keep learning skills relevant to your target roles.
-            </p>
-        </div>
-
-        <div class="card">
-            <div class="number">02 — CONSISTENCY</div>
-            <h3>Keep Showing Up</h3>
-            <p>
-                Apply strategically, follow up professionally,
-                and make progress even when results take time.
-            </p>
-        </div>
-
-        <div class="card">
-            <div class="number">03 — MINDSET</div>
-            <h3>Stay Adaptable</h3>
-            <p>
-                Take feedback, learn from every interview,
-                and treat setbacks as information, not failure.
-            </p>
-        </div>
+    <div class="fun">
+        🚀 7 stories ka mission complete<br>
+        🤖 Claude ki battery down<br>
+        🎨 Aaj Figma MCP ki baari!
     </div>
 
-    <div class="referral">
-        <div class="section-label">03 / A SMALL STEP FORWARD</div>
-
-        <h2>About Deloitte</h2>
-
-        <p>
-            I've referred you to Deloitte because I wanted to
-            help you explore another opportunity. Now, keep
-            preparing and give yourself the best possible chance.
-            The selection outcome isn't in our hands, but your
-            preparation and persistence are.
-        </p>
-
-        <button onclick="showNote()">
-            Open a personal note →
-        </button>
-
-        <div id="note">
-            Nandita, just a reminder: don't be too hard on yourself
-            during this phase. Keep your skills sharp, stay open
-            to opportunities, and keep moving forward.
-            <br><br>
-            All the best for your career. Keep going — you've got
-            your own journey to build.
-            <br><br>
-            — Himanshu
-        </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="section-label">04 / FINAL THOUGHT</div>
-
-    <h2>Build the next chapter. One step at a time.</h2>
-
-    <p>
-        No unnecessary pressure. No comparison with anyone else's
-        timeline. Just consistent effort, better preparation,
-        and the confidence to try again.
-    </p>
-
-    <footer>
-        <span>PERSONAL NOTE // 001</span>
-        <span>Stay focused. Stay consistent.</span>
-    </footer>
-
-</main>
+    <button onclick="copyMessage()">📋 Copy Message</button>
+</div>
 
 <script>
-function showNote() {
-    const note = document.getElementById("note");
-    note.style.display = "block";
-    note.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-    });
+function copyMessage() {
+    const message = `Hi KD, suno na 
+
+Aaj morning call mein Manohar ko bol dena ki saare epics complete ho gaye hain. Maine abhi just push kiya hai.
+
+Bolna ki Himanshu ko Claude ke saath thoda issue face karna pada isliye uska poora din nikal gaya 😂
+
+Total 7 user stories pending thi. Himanshu ne 2 complete ki aur maine 5 complete kar di. Saath mein CI aur Rancher ka kaam bhi kar diya, including Docker files.
+
+Maine apna personal Claude use kiya tha kaam complete karne ke liye. But woh $23 wala plan bhi exhaust ho gaya hai 🥲 Ab Claude bhi bol raha hai: bhai bas kar aaj ke liye 😂
+
+Aaj Figma MCP setup karenge taaki UI ka visual drift fix kar sakein. Abhi UI thoda Figma se different hai na, toh MCP se usko match karne ki try karenge.`;
+
+    navigator.clipboard.writeText(message)
+        .then(() => alert("Message copied! Ab KD ko bhej do 😂"))
+        .catch(() => alert("Please select and copy the message manually."));
 }
 </script>
+
 </body>
 </html>
