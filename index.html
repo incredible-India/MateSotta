@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Suno Na 😂</title>
+<title>Hi KD - Work Update</title>
 
 <style>
     * {
@@ -18,61 +18,46 @@
         justify-content: center;
         align-items: center;
         padding: 20px;
-        font-family: "Segoe UI", sans-serif;
-        background: linear-gradient(135deg, #ffe0ec, #e0e7ff);
-        color: #29233d;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+        color: #273044;
     }
 
     .card {
         width: 100%;
-        max-width: 520px;
-        background: white;
+        max-width: 540px;
+        background: #fff;
         padding: 28px;
-        border-radius: 24px;
-        box-shadow: 0 15px 40px #6c63a333;
-        border: 2px solid #ffffff;
-        animation: pop 0.6s ease;
-    }
-
-    .emoji {
-        font-size: 42px;
-        text-align: center;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(50, 50, 93, 0.10);
     }
 
     h1 {
+        color: #4f46e5;
+        font-size: 28px;
         text-align: center;
-        color: #8b5cf6;
-        margin: 8px 0;
-        font-size: 30px;
+        margin-bottom: 8px;
     }
 
     .subtitle {
         text-align: center;
-        color: #777;
+        color: #737b8c;
         margin-bottom: 24px;
     }
 
     .message {
-        background: #faf5ff;
-        border-left: 5px solid #a78bfa;
-        padding: 18px;
-        border-radius: 12px;
-        line-height: 1.8;
+        background: #f8faff;
+        border-left: 4px solid #818cf8;
+        padding: 20px;
+        border-radius: 10px;
         font-size: 15px;
+        line-height: 1.8;
+        white-space: pre-line;
     }
 
     .highlight {
-        color: #7c3aed;
-        font-weight: bold;
-    }
-
-    .fun {
-        margin-top: 18px;
-        background: #fff7ed;
-        padding: 14px;
-        border-radius: 12px;
-        text-align: center;
-        font-size: 14px;
+        color: #4338ca;
+        font-weight: 600;
     }
 
     button {
@@ -80,27 +65,16 @@
         margin-top: 20px;
         padding: 13px;
         border: none;
-        border-radius: 12px;
-        background: #8b5cf6;
+        border-radius: 10px;
+        background: #4f46e5;
         color: white;
-        font-size: 16px;
-        font-weight: bold;
+        font-size: 15px;
+        font-weight: 600;
         cursor: pointer;
     }
 
     button:hover {
-        background: #7c3aed;
-    }
-
-    @keyframes pop {
-        from {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
+        background: #4338ca;
     }
 </style>
 </head>
@@ -108,71 +82,31 @@
 <body>
 
 <div class="card">
-    <div class="emoji">🥹💻😂</div>
+    <h1>Hi KD, suno na</h1>
+    <p class="subtitle">Quick update for today's morning call</p>
 
-    <h1>Hi KD, suno na!</h1>
-    <p class="subtitle">Ek chhota sa morning mission hai 😜</p>
+    <div class="message" id="message">Hi KD, suno na.
 
-    <div class="message">
-        Hi KD, <span class="highlight">suno na</span> ❤️
+Aaj morning call mein Manohar ko bol dena ki saare epics complete ho gaye hain. Maine abhi just push kiya hai.
 
-        <br><br>
+Bolna ki Himanshu ko Claude ke saath issue face karna pada jiski wajah se kaafi time lag gaya.
 
-        Aaj morning call mein Manohar ko bol dena ki
-        <span class="highlight">saare epics complete ho gaye hain</span>.
-        Maine abhi just push kiya hai.
+Total 7 user stories pending thi. Himanshu ne 2 complete ki aur maine 5 complete kar di. Saath mein CI, Rancher aur Docker files ka kaam bhi complete kar diya.
 
-        <br><br>
+Maine apna personal Claude plan use kiya tha to complete these tasks, but uska $23 wala usage bhi exhaust ho gaya hai so abhi use nahi kar paa raha hoon.
 
-        Bolna ki Himanshu ko Claude ke saath thoda issue face karna pada
-        isliye uska poora din nikal gaya 😂
+Aaj hum Figma MCP setup karenge taaki UI mein jo visual drift hai usko fix kar sakein. Abhi UI Figma design se thoda different hai so MCP setup karke usko align karne par kaam karenge.</div>
 
-        <br><br>
-
-        Total 7 user stories pending thi.
-        Himanshu ne 2 complete ki aur maine 5 complete kar di.
-        Saath mein <span class="highlight">CI aur Rancher ka kaam bhi</span>
-        kar diya, including Docker files.
-
-        <br><br>
-
-        Maine apna personal Claude use kiya tha kaam complete karne ke liye.
-        But woh $23 wala plan bhi exhaust ho gaya hai 🥲
-        Ab Claude bhi bol raha hai: bhai bas kar aaj ke liye 😂
-
-        <br><br>
-
-        Aaj Figma MCP setup karenge taaki UI ka visual drift fix kar sakein.
-        Abhi UI thoda Figma se different hai na, toh MCP se usko
-        match karne ki try karenge.
-    </div>
-
-    <div class="fun">
-        🚀 7 stories ka mission complete<br>
-        🤖 Claude ki battery down<br>
-        🎨 Aaj Figma MCP ki baari!
-    </div>
-
-    <button onclick="copyMessage()">📋 Copy Message</button>
+    <button onclick="copyMessage()">Copy Message</button>
 </div>
 
 <script>
 function copyMessage() {
-    const message = `Hi KD, suno na 
+    const text = document.getElementById("message").innerText;
 
-Aaj morning call mein Manohar ko bol dena ki saare epics complete ho gaye hain. Maine abhi just push kiya hai.
-
-Bolna ki Himanshu ko Claude ke saath thoda issue face karna pada isliye uska poora din nikal gaya 😂
-
-Total 7 user stories pending thi. Himanshu ne 2 complete ki aur maine 5 complete kar di. Saath mein CI aur Rancher ka kaam bhi kar diya, including Docker files.
-
-Maine apna personal Claude use kiya tha kaam complete karne ke liye. But woh $23 wala plan bhi exhaust ho gaya hai 🥲 Ab Claude bhi bol raha hai: bhai bas kar aaj ke liye 😂
-
-Aaj Figma MCP setup karenge taaki UI ka visual drift fix kar sakein. Abhi UI thoda Figma se different hai na, toh MCP se usko match karne ki try karenge.`;
-
-    navigator.clipboard.writeText(message)
-        .then(() => alert("Message copied! Ab KD ko bhej do 😂"))
-        .catch(() => alert("Please select and copy the message manually."));
+    navigator.clipboard.writeText(text)
+        .then(() => alert("Message copied successfully!"))
+        .catch(() => alert("Please copy the message manually."));
 }
 </script>
 
