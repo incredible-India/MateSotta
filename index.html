@@ -1,113 +1,389 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hi KD - Work Update</title>
+<title>Mission: Survive Manohar 💀</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: linear-gradient(135deg, #eef2ff, #f5f3ff);
-        color: #273044;
-    }
+body {
+  margin: 0;
+  padding: 20px;
+  background: #101116;
+  color: #f4f4f7;
+  font-family: Arial, sans-serif;
+}
 
-    .card {
-        width: 100%;
-        max-width: 540px;
-        background: #fff;
-        padding: 28px;
-        border-radius: 18px;
-        box-shadow: 0 12px 35px rgba(50, 50, 93, 0.10);
-    }
+.container {
+  max-width: 650px;
+  margin: 20px auto;
+  background: #191a22;
+  border: 1px solid #383945;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px #0008;
+}
 
-    h1 {
-        color: #4f46e5;
-        font-size: 28px;
-        text-align: center;
-        margin-bottom: 8px;
-    }
+.header {
+  padding: 25px;
+  background: #252632;
+  border-bottom: 2px solid #ff6578;
+}
 
-    .subtitle {
-        text-align: center;
-        color: #737b8c;
-        margin-bottom: 24px;
-    }
+.header h1 {
+  margin: 0 0 12px;
+  font-size: 25px;
+  color: #ff7183;
+  line-height: 1.3;
+}
 
-    .message {
-        background: #f8faff;
-        border-left: 4px solid #818cf8;
-        padding: 20px;
-        border-radius: 10px;
-        font-size: 15px;
-        line-height: 1.8;
-        white-space: pre-line;
-    }
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #ff9ba7;
+  border: 1px solid #814550;
+  padding: 7px 10px;
+  border-radius: 5px;
+}
 
-    .highlight {
-        color: #4338ca;
-        font-weight: 600;
-    }
+.header p {
+  color: #d0d0da;
+  line-height: 1.6;
+}
 
-    button {
-        width: 100%;
-        margin-top: 20px;
-        padding: 13px;
-        border: none;
-        border-radius: 10px;
-        background: #4f46e5;
-        color: white;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-    }
+form {
+  padding: 24px;
+}
 
-    button:hover {
-        background: #4338ca;
-    }
+.question {
+  margin-bottom: 28px;
+}
+
+.question h3 {
+  font-size: 16px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #20212a;
+  border: 1px solid #41424e;
+  border-radius: 10px;
+  padding: 13px;
+  margin: 9px 0;
+  cursor: pointer;
+  line-height: 1.5;
+  transition: .2s;
+}
+
+.option:hover {
+  border-color: #ff7183;
+  background: #302129;
+}
+
+.option:has(input:checked) {
+  border-color: #ff7183;
+  background: #39232c;
+}
+
+.option input {
+  margin-top: 4px;
+  accent-color: #ff7183;
+  flex-shrink: 0;
+}
+
+button {
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  padding: 16px;
+  background: #ff6578;
+  color: #171018;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:hover {
+  background: #ff8998;
+  transform: translateY(-1px);
+}
+
+.footer {
+  padding: 0 24px 24px;
+  text-align: center;
+  font-size: 12px;
+  color: #9697a5;
+}
+
+#result {
+  display: none;
+  margin: 0 24px 24px;
+  padding: 22px;
+  border-radius: 12px;
+  border: 1px solid #8b5861;
+  background: #302128;
+  line-height: 1.8;
+}
+
+#result h2 {
+  color: #ff8594;
+}
+
+#result ul {
+  padding-left: 20px;
+}
+
+.small {
+  font-size: 12px;
+  color: #b7b7c5;
+}
+
+@media (max-width: 480px) {
+  body { padding: 10px; }
+  .header, form { padding: 18px; }
+  .header h1 { font-size: 22px; }
+}
 </style>
 </head>
 
 <body>
 
-<div class="card">
-    <h1>Hi KD, suno na</h1>
-    <p class="subtitle">Quick update for today's morning call</p>
+<div class="container">
 
-    <div class="message" id="message">Hi KD, suno na.
+  <div class="header">
+    <h1>🛡️ MISSION: SURVIVE MANOHAR</h1>
+    <div class="badge">TOP SECRET • SURVIVAL DIVISION</div>
+    <p>
+      Welcome, Employee. Your mission is to survive night shifts,
+      AI confusion and deadlines that travel faster than light. 💀
+    </p>
+    <p><b>⚠️ Warning:</b> Chai consumption may increase dramatically.</p>
+  </div>
 
-Aaj morning call mein Manohar ko bol dena ki saare epics complete ho gaye hain. Maine abhi just push kiya hai.
+  <form id="missionForm">
 
-Bolna ki Himanshu ko Claude ke saath issue face karna pada jiski wajah se kaafi time lag gaya.
+    <div class="question">
+      <h3>01. Raat bhar kaam karne ke baad bhi daant padi?</h3>
 
-Total 7 user stories pending thi. Himanshu ne 2 complete ki aur maine 5 complete kar di. Saath mein CI, Rancher aur Docker files ka kaam bhi complete kar diya.
+      <label class="option">
+        <input type="radio" name="q1" required
+        value="Night shift bhi ki aur insult shift bhi">
+        🌙 Night shift bhi ki aur insult shift bhi
+      </label>
 
-Maine apna personal Claude plan use kiya tha to complete these tasks, but uska $23 wala usage bhi exhaust ho gaya hai so abhi use nahi kar paa raha hoon.
+      <label class="option">
+        <input type="radio" name="q1"
+        value="Sleep is temporary, scolding is permanent">
+        🤡 Sleep is temporary Manohar's scolding is permanent
+      </label>
 
-Aaj hum Figma MCP setup karenge taaki UI mein jo visual drift hai usko fix kar sakein. Abhi UI Figma design se thoda different hai so MCP setup karke usko align karne par kaam karenge.</div>
+      <label class="option">
+        <input type="radio" name="q1"
+        value="Overtime free, appreciation paid">
+        ☕ Overtime free hai par appreciation paid
+      </label>
 
-    <button onclick="copyMessage()">Copy Message</button>
+      <label class="option">
+        <input type="radio" name="q1"
+        value="Employee or 24x7 support">
+        🥲 Employee hoon ya 24×7 customer support?
+      </label>
+    </div>
+
+    <div class="question">
+      <h3>02. AI use karo toh bhi problem? 🤖</h3>
+
+      <label class="option">
+        <input type="radio" name="q2" required
+        value="AI use kiya toh khud kyun nahi kiya">
+        🤖 AI use kiya toh khud kyun nahi kiya?
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q2"
+        value="AI nahi use kiya toh slow kyun">
+        💀 AI nahi use kiya toh itna slow kyun ho?
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q2"
+        value="AI is confused too">
+        😂 AI bhi confused hai ki kare toh kare kya
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q2"
+        value="ChatGPT needs a performance review">
+        🚨 ChatGPT ko bhi ab performance review chahiye
+      </label>
+    </div>
+
+    <div class="question">
+      <h3>03. "Kaam fast karo" sunke reaction? ⚡</h3>
+
+      <label class="option">
+        <input type="radio" name="q3" required
+        value="Sir code hai Maggi nahi">
+        ⚡ Sir code hai Maggi nahi
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q3"
+        value="Developer hoon Formula 1 car nahi">
+        🏎️ Developer hoon Formula 1 car nahi
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q3"
+        value="Compile hone se pehle deadline aa gayi">
+        💀 Compile hone se pehle hi deadline aa gayi
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q3"
+        value="Speed 100 percent bugs bhi 100 percent">
+        🤡 Speed 100% bugs bhi 100%
+      </label>
+    </div>
+
+    <div class="question">
+      <h3>04. Night shift ka favourite dialogue? 🌚</h3>
+
+      <label class="option">
+        <input type="radio" name="q4" required
+        value="Raat ko kaam karna expected hai">
+        🌚 Raat ko kaam karna toh expected hai
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q4"
+        value="2 AM hai toh kya hua">
+        ⏰ 2 AM hai toh kya hua deadline toh deadline hai
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q4"
+        value="Body offline brain restart">
+        😭 Body offline hai sir brain bhi restart maang raha hai
+      </label>
+    </div>
+
+    <div class="question">
+      <h3>05. AI se code likhwa liya phir bhi issue? 💻</h3>
+
+      <label class="option">
+        <input type="radio" name="q5" required
+        value="AI responsible human innocent">
+        🤖 AI responsible human innocent
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q5"
+        value="AI ne likha review bhi main hi karun">
+        💀 AI ne likha review bhi main hi karun?
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q5"
+        value="AI ka appraisal bhi aap kar lo">
+        😂 Sir ab AI ka appraisal bhi aap hi kar lo
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q5"
+        value="Prompt engineer salary developer wali">
+        🧑‍💻 Prompt engineer bana diya salary developer wali
+      </label>
+    </div>
+
+    <div class="question">
+      <h3>06. Mission join karne ka reason? 🤫</h3>
+
+      <label class="option">
+        <input type="radio" name="q6" required
+        value="Jab tak salary hai tab tak loyalty hai">
+        🫡 Jab tak salary hai tab tak loyalty hai
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q6"
+        value="LinkedIn open karke rakha hai">
+        🏃 LinkedIn open karke rakha hai
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q6"
+        value="Hum saath saath suffer karenge">
+        🤝 Hum saath saath suffer karenge
+      </label>
+
+      <label class="option">
+        <input type="radio" name="q6"
+        value="Notice period is my dream destination">
+        💀 Notice period is my dream destination
+      </label>
+    </div>
+
+    <button type="submit">
+      INITIATE SURVIVAL MODE 💀
+    </button>
+
+  </form>
+
+  <div id="result" role="status" aria-live="polite">
+    <h2>🎖️ APPLICATION RECEIVED!</h2>
+    <p>Congratulations, Survivor! 😂</p>
+    <p>
+      Your answers indicate advanced experience in night-shift
+      survival, AI confusion and deadline management.
+    </p>
+    <b>MISSION STATUS: STILL SURVIVING 💀</b>
+    <ul>
+      <li>Night shift survival: Certified 🌙</li>
+      <li>AI confusion handling: Expert 🤖</li>
+      <li>Deadline pressure: Legendary ⚡</li>
+      <li>Next mission: Survive the next stand-up call ☕</li>
+    </ul>
+    <p class="small">
+      This is a joke confirmation. Your answers are not uploaded
+      or sent anywhere.
+    </p>
+    <button type="button" onclick="location.reload()">
+      RESTART MISSION 🔄
+    </button>
+  </div>
+
+  <div class="footer">
+    UNOFFICIAL EMPLOYEE HUMOUR CLUB • NO REAL AUTHORITY 😂
+  </div>
+
 </div>
 
 <script>
-function copyMessage() {
-    const text = document.getElementById("message").innerText;
+document.getElementById("missionForm").addEventListener(
+  "submit",
+  function(event) {
+    event.preventDefault();
 
-    navigator.clipboard.writeText(text)
-        .then(() => alert("Message copied successfully!"))
-        .catch(() => alert("Please copy the message manually."));
-}
+    document.getElementById("missionForm").style.display = "none";
+    document.getElementById("result").style.display = "block";
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+);
 </script>
 
 </body>
